@@ -1,0 +1,71 @@
+## Program multiplying three user input variables
+## Assignment #7
+## 3/25/17
+## Austin Draper 
+## CPSC 440 - 13434
+
+.data
+	promptA:	.asciiz "Enter your variable A: "
+	promptX:	.asciiz "Enter your variable X: "
+	promptY:	.asciiz "Enter your variable Y: "
+	ans:	.asciiz "The answer to A*X*Y is: "
+	endl:	.asciiz "\n"	   
+
+.text	
+.globl main
+
+main:                
+
+	la $a0,promptA   # Prompt user for A
+        li $v0,4        # system call to print
+        syscall         # out a string
+
+        li $v0,5	# syscall 5 reads an integer
+        syscall      
+
+	addi $t1, $v0, 0 #put user input into $t1
+
+	la $a0,promptX   # Prompt user for X
+	li $v0,4        # system call to print
+        syscall         # out a string
+
+        li $v0,5	# syscall 5 reads an integer
+        syscall      
+
+	addi $t2, $v0, 0 #put user input into $t2
+
+	la $a0,promptY   # Prompt user for Y
+	li $v0,4        # system call to print
+        syscall         # out a string
+
+        li $v0,5	# syscall 5 reads an integer
+        syscall      
+
+	addi $t3, $v0, 0 #put user input into $t3
+
+	j calculate
+
+
+
+calculate:
+	mul $t0,$t1,$t2 #mult var A by var X store in $t0
+	mul $t4,$t0,$t3 #mult ans by var Y store in $t4   
+
+	la $a0,ans   # Prep to display answer
+	li $v0,4        # system call to print
+        syscall         # out a string
+
+	move $a0,$t4	# print result
+	li $v0,1
+	syscall
+
+	la $a0,endl	# syscal to print out
+	li $v0,4	# a new line
+	syscall 	
+
+	li $v0,10
+	syscall		# Bye!
+
+
+
+  	

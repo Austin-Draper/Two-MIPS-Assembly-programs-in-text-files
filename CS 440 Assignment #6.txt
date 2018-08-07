@@ -1,0 +1,111 @@
+## Program converting user inputed temperature from Fahrenheit to Celsius or vice versa
+## Assignment #6
+## 3/4/17
+## Austin Draper 
+## CPSC 440 - 13434
+
+  .data
+	ForC:	.asciiz "Enter F for fahrenheit or C for celsius: "
+	promptC:	.asciiz "Enter temperature (Celsius): "
+	promptF:	.asciiz "Enter temperature (Fahrenheit): "
+	ansF:	.asciiz "The temperature in Fahrenheit is "
+	ansC:	.asciiz "The temperature in Celsius is "
+	endl:	.asciiz "\n"	
+
+.text
+.globl main
+
+main:                
+	
+	la $a0,ForC	#in fahrenheit or celcius
+	li $v0,4	#load 4 into $v0
+	syscall		#print the string ForC
+
+	li $v0,12	#take 'C' or 'F' input  C=67 F=70 decimal
+	syscall		#load users input of F or C
+
+	ori  $t1, $zero, 0	#zero out $t1	
+	ori  $t2, $zero, 0	#zero out $t2
+	ori  $t3, $zero, 0	#zero out $t3
+	addi $t1, 67  		#put 67 in $t1
+	addi $t2, 70  		#put 70 in $t2
+	addi $t3, 81  		#put 81 in $t3
+	beq $v0, $t1, CeltoFah	#branch to CeltoFah if user inputs C 
+	beq $v0, $t2, FahtoCel	#branch to FahtoCel if user inputs F 
+	beq $v0, $t3, End	#branch to End if user inputs Q 
+	la $a0,endl	# syscal to print out
+	li $v0,4	# a new line
+	syscall 
+	j   main	#start over if invalid input
+
+CeltoFah:
+	
+	la $a0,endl	
+	li $v0,4	
+	syscall 	#print a new line
+
+        la $a0,promptC   
+        li $v0,4        
+        syscall         #prompt user for integer 
+
+        li $v0,5	
+        syscall         #read in the integer
+
+	mul $t0,$v0,9 	#mult by 9, put result in $t0
+	div $t0,$t0,5 	#divide $t0 by 5
+	addi $t0,$t0,32  #add 32 to result
+
+	la $a0,ansF	
+	li $v0,4
+	syscall 	#print string before the result
+
+	move $a0,$t0	
+	li $v0,1
+	syscall		#print result
+
+	la $a0,endl	
+	li $v0,4	
+	syscall 	#print new line
+	j main		#jump back to main
+
+FahtoCel:
+
+	la $a0,endl	
+	li $v0,4	
+	syscall 
+
+	la $a0,promptF   
+        li $v0,4       
+        syscall        
+
+        li $v0,5	
+        syscall         
+	
+	ori  $t3, $zero, 0
+	addi $t3,32
+	sub $t0,$v0,$t3 #subtract 32
+	mul  $t0,$t0,5 	#mult by 5
+	div  $t0,$t0,9 	#divide by 9
+
+	la $a0,ansC	
+	li $v0,4
+	syscall 	#print string before the result
+
+	move $a0,$t0	
+	li $v0,1
+	syscall		#print result
+
+	la $a0,endl	
+	li $v0,4	
+	syscall 
+	j main		#print a new line
+
+
+End:
+	li $v0,10
+	syscall		#End the program
+
+
+         
+
+## End of Program	

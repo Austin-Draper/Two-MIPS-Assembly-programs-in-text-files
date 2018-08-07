@@ -1,0 +1,75 @@
+## Program multiplying a formula including two user input variables
+## Assignment #7
+## 3/25/17
+## Austin Draper 
+## CPSC 440 - 13434
+
+.data
+	promptU:	.asciiz "Enter your variable U: "
+	promptV:	.asciiz "Enter your variable V: "
+	ans:	.asciiz "The answer to 5u^2 - 12uv + 6v^2 is: "
+	endl:	.asciiz "\n"	      
+
+.text	
+.globl main
+
+main:               
+
+	la $a0,promptU   # Prompt user for u
+        li $v0,4        # system call to print
+        syscall         # out a string
+
+        li $v0,5	# syscall 5 reads an integer
+        syscall      
+
+	addi $t1, $v0, 0 #put user input into $t1
+
+	la $a0,promptV   # Prompt user for v
+	li $v0,4        # system call to print
+        syscall         # out a string
+
+        li $v0,5	# syscall 5 reads an integer
+        syscall      
+
+	addi $t2, $v0, 0 #put user input into $t2
+
+	beq $t1, $zero, checkquit
+	j calculate
+
+checkquit:
+	bne $t2, $zero, calculate
+	li $v0,10
+	syscall		# Bye!
+
+
+
+calculate:
+	mul $t0,$t1,$t1 #mult var U by itself
+	mul $t0,$t0,5   #mult var U by 5 store in $t0
+
+	mul $t3, $t2, $t1  #mult var V and var U
+	mul $t3, $t3, 12   #mult answer by 12 store in $t3
+
+	mul $t4, $t2, $t2  #mult var V by itself
+	mul $t4, $t4, 6    #mult var V by 6 store in $t4
+
+	sub $t5, $t0, $t3  #5u^2 - 12uv
+	add $t5, $t5, $t4  #ans + 6v^2
+
+	la $a0,ans   # Prep to display answer
+	li $v0,4        # system call to print
+        syscall         # out a string
+
+	move $a0,$t5	# print result
+	li $v0,1
+	syscall
+
+	la $a0,endl	# syscal to print out
+	li $v0,4	# a new line
+	syscall 
+	j __start	
+
+
+
+  	
+	
